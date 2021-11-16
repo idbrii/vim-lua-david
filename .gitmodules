@@ -1,0 +1,3 @@
+[submodule "lib/ltags"]
+	path = lib/ltags
+	url = git@github.com:idbrii/ltags.git
