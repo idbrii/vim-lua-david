@@ -44,7 +44,7 @@ function! david#lua#runner#set_entrypoint(makeprg)
     " Don't let python settings leak into lua.
     let g:asyncrun_exit = ''
 
-    command! ProjectMake call DavidProjectBuild()
+    command! ProjectMake call david#lua#run_with('luatesty')
     command! ProjectRun  call DavidProjectBuild()
     let &makeprg = entrypoint_makeprg
     exec david#path#build_kill_from_current_makeprg()
