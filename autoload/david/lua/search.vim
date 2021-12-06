@@ -7,7 +7,9 @@ function! david#lua#search#FindUnusedModules() abort
 
     let lazyredraw_bak = &lazyredraw
     let &lazyredraw = 1
-
+    let maxmempattern_bak = &maxmempattern
+    let &maxmempattern = max([&maxmempattern, 5000])
+    
     tabnew
 
     let allow_async_bak = g:notgrep_allow_async
@@ -56,6 +58,7 @@ function! david#lua#search#FindUnusedModules() abort
     nnoremap \\ :Gremo <Bar> next<CR>
 
     let &lazyredraw = lazyredraw_bak
+    let &maxmempattern = maxmempattern_bak
     redraw
 
     echo "Unused modules loaded to arglist:"
