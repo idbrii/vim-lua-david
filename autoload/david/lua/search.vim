@@ -33,7 +33,7 @@ function! david#lua#search#FindUnusedModules() abort
     silent let @c = @/
     silent Bwipeout
     " Special case some massive libraries
-    let massive = { 'cpml' : 0, 'pl' : 0 }
+    let massive = { 'astray' : 0, 'cpml' : 0, 'maze' : 0, 'pl' : 0, }
     for key in keys(massive)
         let massive[key] = search('\v<'.. key ..'>', 'nw') > 0
     endfor
