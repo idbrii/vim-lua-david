@@ -21,17 +21,17 @@ function! david#lua#search#FindUnusedModules() abort
     let g:notgrep_allow_async = allow_async_bak
 
     copen
-    %yank c
-    Scratch
-    0put c
-    %v/\.lua|/d
-    %g/| --/d
-    %v/\v.*\s*<require\s*\(?(["'])(.*)\1\)?.*/d
-    %sm//\2
-    %s,\.,/,g
-    %SearchForAnyLine
-    let @c = @/
-    Bwipeout
+    silent %yank c
+    silent Scratch
+    silent 0put c
+    silent %v/\.lua|/d
+    silent %g/| --/d
+    silent %v/\v.*\s*<require\s*\(?(["'])(.*)\1\)?.*/d
+    silent %sm//\2
+    silent %s,\.,/,g
+    silent %SearchForAnyLine
+    silent let @c = @/
+    silent Bwipeout
     " Special case some massive libraries
     let massive = { 'cpml' : 0, 'pl' : 0 }
     for key in keys(massive)
