@@ -17,6 +17,11 @@ function! david#lua#runner#set_entrypoint(makeprg)
         let g:ale_lua_luacheck_options .= ' --std love+luajit'
         let target = cur_dir
 
+        " TODO: Should parse conf.lua to see if we call setRequirePath, but
+        " this is fine for now.
+        let $LUA_PATH = $LUA_PATH ..";src/?.lua;src/?/init.lua;src/lib/?.lua;src/lib/?/init.lua"
+        let g:david_lua_testy_chdir = 'cd '.. target
+
         " Gabe uses S for a global.
         let g:vim_lsp_settings_sumneko_lua_language_server_workspace_config.Lua.diagnostics.globals = 'S'
     else

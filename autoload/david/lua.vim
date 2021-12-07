@@ -25,7 +25,11 @@ function! david#lua#run_with(compiler) abort
     " install with `luarocks install testy`
     exec 'compiler' a:compiler
     update
-    call david#path#chdir_to_current_file()
+    if exists('g:david_lua_testy_chdir')
+        exec g:david_lua_testy_chdir
+    else
+        call david#path#chdir_to_current_file()
+    endif
     AsyncMake
 endf
 
