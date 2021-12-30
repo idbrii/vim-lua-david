@@ -19,7 +19,8 @@ function! david#lua#runner#set_entrypoint(makeprg)
 
         " TODO: Should parse conf.lua to see if we call setRequirePath, but
         " this is fine for now.
-        let $LUA_PATH = $LUA_PATH ..";src/?.lua;src/?/init.lua;src/lib/?.lua;src/lib/?/init.lua"
+        let $LUA_PATH     = $LUA_PATH     ..";src/?.lua;src/?/init.lua;src/lib/?.lua;src/lib/?/init.lua"
+        let $LUA_PATH_5_3 = $LUA_PATH_5_3 ..";src/?.lua;src/?/init.lua;src/lib/?.lua;src/lib/?/init.lua"
         let g:david_lua_testy_chdir = 'cd '.. target
 
         " Gabe uses S for a global.
