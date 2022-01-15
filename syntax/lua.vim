@@ -1,10 +1,3 @@
-" Member function calls require a :
-" Hack around polyglot's lua syntax (which makes self a builtin and I don't
-" know how to handle that in vim syntax).
-syn clear luaBuiltIn
-syn keyword luaBuiltIn _ENV
-syn match luaError "self\(\.\l\+\)*\.\u\w\+(" display
-
 " Our class system uses _base as the parent class. We want the instance passed
 " as self and not the class.
 syn match luaError "\<_base:" display
