@@ -33,8 +33,31 @@ function! david#lua#run_with(compiler) abort
     AsyncMake
 endf
 
-function! david#lua#HeavyDutyFixer() abort
+function! david#lua#HeavyDutyFixer() range abort
+    if a:firstline == 1 && a:lastline == line('$')
+        call david#lua#HeavyDutyFixer_wholefile()
+    else
+        call david#lua#HeavyDutyFixer_range(a:firstline, a:lastline)
+    endif
+endf
+
+function! david#lua#HeavyDutyFixer_wholefile() abort
     call add(g:ale_fixers.lua, 'stylua')
     ALEFix
     call remove(g:ale_fixers.lua, index(g:ale_fixers.lua, 'stylua'))
+endf
+
+
+" ALEFix only operates on a whole file. Use NrrwRgn to limit to selection.
+function! david#lua#HeavyDutyFixer_range(startline, endline) abort
+    let lazyredraw_bak = &lazyredraw
+    let &lazyredraw = 1
+    
+    exec printf("%d,%d NR", a:startline, a:endline)
+    call david#lua#HeavyDutyFixer_wholefile() 
+    
+    " Can't auto close the region because ALEFix isn't synchronous and it gives
+    " errors: "The file was changed before fixing finished"
+
+    let &lazyredraw = lazyredraw_bak
 endf
