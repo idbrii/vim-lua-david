@@ -12,6 +12,26 @@ function! Ale_fixers_stylua_Fix(buffer) abort
     let l:executable = ale#Var(a:buffer, 'lua_stylua_executable')
     let l:options = ale#Var(a:buffer, 'lua_stylua_options')
 
+    " Assume buffer settings are correct.
+    let options .= " --indent-width=".. &shiftwidth
+    let options .= " --indent-type="
+    if &expandtab
+        let options .= "Spaces"
+    else
+        let options .= "Tabs"
+    endif
+
+    let options .= " --line-endings="
+    if &ff == "dos"
+        let options .= "Windows"
+    else
+        let options .= "Unix"
+    endif
+
+    if &textwidth > 0
+        let options .= " --column-width=".. &textwidth
+    endif
+    
     let l:cmd = printf("%s %s %%t", ale#Escape(l:executable), l:options)
     return {
     \   'command': l:cmd,
