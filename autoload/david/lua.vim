@@ -64,10 +64,48 @@ endf
 
 " Callback after running ALEFix. See :h ale-fix
 function! david#lua#ale_fix_cb(buffer, output) abort
-    let out = a:output
-    " Use my preferred require format.
-    for i in range(0, len(out)-1)
-        let out[i] = substitute(out[i], '\vrequire\((.*)\)', 'require \1', "")
+    let lines = []
+    let prefix = ""
+    let shift = "\t"
+    if &expandtab
+        let shift = '    '
+    endif
+    
+    for line in a:output
+        " Use my preferred require format.
+        let line = substitute(line, '\vrequire\((.*)\)', 'require \1', "")
+        " Keep :AddChild on same line since rest of chains are applying to a
+        " different object.
+        if line =~# '\v^\s+:AddChild'
+            let prev = lines->remove(-1)
+            let prev = substitute(prev, '\s*$', '', '')
+            let line = substitute(line, '^\s*', '', '')
+            let line = prev .. line
+        elseif line =~# '\v\)\zs:\u'
+            " Put repeated function chaining on a separate line. Puts f():g()
+            " or s:f():g() on two lines -- s:f() shouldn't get split up.
+            let indent = matchstr(line, '\v^\s*')
+            let prefix = shift .. indent
+            let sep = '):'
+
+            let parts = line->split(sep)
+            let line = parts[0] .. ')'
+            let parts = parts[1:]
+            let parts = parts->map({k,v -> ':'.. v .. ')'})
+            " These seems unnecessary.
+            "~ if parts[0] =~# '\v<AddChild>'
+            "~     let line .= sep.. parts[0]
+            "~     let parts = parts[1:]
+            "~ endif
+            call add(lines, line)
+            for p in parts[:-2]
+                call add(lines, prefix .. p)
+            endfor
+            " Last line, without the extra ) I added
+            let line = prefix .. parts[-1][:-2]
+        endif
+        call add(lines, line)
     endfor
-    return out
+    return lines
 endf
+
