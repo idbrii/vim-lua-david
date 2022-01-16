@@ -36,6 +36,7 @@ function! Ale_fixers_stylua_Fix(buffer) abort
     return {
     \   'command': l:cmd,
     \   'read_temporary_file': 1,
+    \   'process_with': "david#lua#ale_fix_cb",
     \ }
 endfunction
 

@@ -61,3 +61,13 @@ function! david#lua#HeavyDutyFixer_range(startline, endline) abort
 
     let &lazyredraw = lazyredraw_bak
 endf
+
+" Callback after running ALEFix. See :h ale-fix
+function! david#lua#ale_fix_cb(buffer, output) abort
+    let out = a:output
+    " Use my preferred require format.
+    for i in range(0, len(out)-1)
+        let out[i] = substitute(out[i], '\vrequire\((.*)\)', 'require \1', "")
+    endfor
+    return out
+endf
