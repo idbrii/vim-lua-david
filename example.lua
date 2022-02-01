@@ -65,6 +65,18 @@ function Person:doStuff()
 	return d
 end
 
+local p = self.input:getActiveControls(function(value)
+		local name_remap = {
+			axis = {
+				left = "Left Stick",
+				["triggerright+"] = "Right Trigger",
+			},
+		}
+		return name_remap[value] or value
+	end)
+	print(p)
+
+
 -- Error highlight
 t[0] = 39
 i += 39
