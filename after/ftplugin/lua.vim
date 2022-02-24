@@ -46,3 +46,6 @@ command! -range=% LuaHeavyDutyFixer <line1>,<line2> call david#lua#HeavyDutyFixe
 
 command! -buffer -nargs=* LuaLoveSetEntrypoint call david#lua#runner#set_entrypoint(david#lua#runner#GetLoveCmd() ..' --console % '.. <q-args>)
 command! -buffer LuaSetEntrypoint call david#lua#runner#set_entrypoint('')
+
+
+call david#lua#lsp#LoadConfigurationForWorkspace()
