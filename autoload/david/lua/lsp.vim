@@ -43,6 +43,13 @@ function! david#lua#lsp#LoadConfigurationForWorkspace() abort
                 \                    },
                 \                },
                 \        }
+    " For some reason, disabling individual diagnostics disables all
+    " diagnostics.
+    "~ let ignored_diagnostics = [
+    "~             \    'lowercase-global', 
+    "~             \    'undefined-global',
+    "~             \]
+    "~ let cfg.Lua.diagnostics.disable = ignored_diagnostics
 
     call lsp#update_workspace_config(servername, cfg)
 endf
