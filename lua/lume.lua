@@ -630,6 +630,27 @@ function lume.merge(...)
 end
 
 
+--- Returns a new table with all the given tables merged together. If a key exists
+-- in multiple tables the right-most table's value is used.
+-- ```lua
+-- lume.deep_merge({a={b={2}, c={3}}}, {a={c={8}, d={9}}}) -- Returns {a={b={2}, c={8}, d={9}}}
+-- ```
+function lume.deep_merge(dest, ...)
+  for i = 1, select("#", ...) do
+    local t = select(i, ...)
+    local iter = getiter(t)
+    for k,v in iter(t) do
+      if type(v) == "table" and type(dest[k]) == "table" then
+        lume.deep_merge(dest[k], v)
+      else
+        dest[k] = v
+      end
+    end
+  end
+  return dest
+end
+
+
 --- Returns a new array consisting of all the given arrays concatenated into one.
 -- ```lua
 -- lume.concat({1, 2}, {3, 4}, {5, 6}) -- Returns {1, 2, 3, 4, 5, 6}

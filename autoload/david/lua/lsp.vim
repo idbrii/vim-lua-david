@@ -16,14 +16,14 @@ function! david#lua#lsp#GetGlobalsFromLuacheckrc(rcfile) abort
     return globs
 endf
 
-function! david#lua#lsp#LoadConfigurationForWorkspace() abort
+function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
     let servername = 'sumneko-lua-language-server'
     if lsp#get_server_status(servername) !=# 'running'
         return
     endif
     let rcfile = david#lua#lsp#GetLuacheckrc()
     let already_applied = get(s:cache_luacheck_workspaces, rcfile, 0)
-    if already_applied
+    if already_applied || (!empty(a:000) && a:1 == "force")
         return
     endif
     let s:cache_luacheck_workspaces[rcfile] = 1
