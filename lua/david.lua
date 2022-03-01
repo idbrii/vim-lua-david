@@ -14,7 +14,7 @@ function david.get_luacheck_globals(luacheckrc_fpath, valid_paths)
     valid_paths = valid_paths or {'data', 'scripts'}
     local fn, msg = loadfile(luacheckrc_fpath)
     if not fn then
-        print(msg)
+        print("ERROR[get_luacheck_globals]", msg)
         return
     end
 

@@ -22,6 +22,9 @@ function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
         return
     endif
     let rcfile = david#lua#lsp#GetLuacheckrc()
+    if !filereadable(rcfile)
+        return
+    endif
     let already_applied = get(s:cache_luacheck_workspaces, rcfile, 0)
     if already_applied || (!empty(a:000) && a:1 == "force")
         return
