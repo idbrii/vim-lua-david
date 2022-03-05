@@ -21,7 +21,6 @@ function! david#lua#runner#set_entrypoint(makeprg)
         " this is fine for now.
         let $LUA_PATH     = $LUA_PATH     ..";src/?.lua;src/?/init.lua;src/lib/?.lua;src/lib/?/init.lua"
         let $LUA_PATH_5_3 = $LUA_PATH_5_3 ..";src/?.lua;src/?/init.lua;src/lib/?.lua;src/lib/?/init.lua"
-        let g:david_lua_testy_chdir = 'cd '.. target
 
         " Gabe uses S for a global.
         let g:vim_lsp_settings_sumneko_lua_language_server_workspace_config.Lua.diagnostics.globals = 'S'
@@ -58,6 +57,7 @@ function! david#lua#runner#set_entrypoint(makeprg)
     " Clobber current project settings.
     silent! unlet g:david_project_filelist
     let g:david_project_root = fnamemodify(cur_file, ':h')
+    let g:david_lua_testy_chdir = 'cd '.. cur_dir
     call LocateAll()
     NotGrepRecursiveFrom .
     " I put code in ./src/
