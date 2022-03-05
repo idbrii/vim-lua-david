@@ -44,7 +44,7 @@ function! david#lua#runner#set_entrypoint(makeprg)
         let &makeprg = entrypoint_makeprg
         " Use AsyncRun instead of AsyncMake so we can pass cwd and ensure
         " callstacks are loaded properly.
-        call execute('AsyncRun -program=make -auto=make -cwd='. cur_dir .' @')
+        execute 'AsyncRun -program=make -auto=make -cwd='. cur_dir .' @'
     endf
     " Don't let python settings leak into lua.
     let g:asyncrun_exit = ''
