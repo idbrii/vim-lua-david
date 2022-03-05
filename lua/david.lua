@@ -19,16 +19,17 @@ function david.get_luacheck_globals(luacheckrc_fpath, valid_paths)
     end
 
     -- intentionally global
-    files, globals = {}, {}
+    files, globals, read_globals = {}, {}, {}
     local cfg = fn() or {}
     cfg = lume.deep_merge(cfg, {
             files = files,
             globals = globals,
+            read_globals = read_globals,
         })
-    files = nil
+    files, globals, read_globals = nil, nil, nil
 
     local globs = {}
-    globs = lume.concat(globs, cfg.globals)
+    globs = lume.concat(globs, cfg.globals, cfg.read_globals)
     for key,settings in pairs(cfg.files) do
         if is_valid_files_pat(key, valid_paths) then
             globs = lume.concat(globs, settings.read_globals, settings.globals)
