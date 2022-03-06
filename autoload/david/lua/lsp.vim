@@ -1,18 +1,17 @@
 let s:cache_luacheck_cfg = {}
-let s:cache_luacheck_workspaces = {}
+let s:cache_luacheck_workspace = ""
 
 function! david#lua#lsp#GetLuacheckrc() abort
     let rcfile = david#path#find_upwards_from_current_file(".luacheckrc")
     if empty(rcfile)
         return ""
     endif
-    return david#path#to_unix(rcfile)
+    return david#path#to_unix(fnamemodify(rcfile, ":p"))
 endf
 function! david#lua#lsp#GetGlobalsFromLuacheckrc(rcfile) abort
     lua david = require "david"
     let cmd = printf("david.dict(david.get_sumneko_cfg_from_luacheck('%s', {'data', 'scripts'}))", a:rcfile)
     let cfg = luaeval(cmd)
-    let s:cache_luacheck_cfg[a:rcfile] = cfg
     return cfg
 endf
 
@@ -25,19 +24,24 @@ function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
     if !filereadable(rcfile)
         return
     endif
-    let already_applied = get(s:cache_luacheck_workspaces, rcfile, 0)
-    if already_applied || (!empty(a:000) && a:1 == "force")
+
+    let force = (!empty(a:000) && a:1 == "force")
+    let already_applied = s:cache_luacheck_workspace == rcfile
+    if already_applied && !force
         return
     endif
-    let s:cache_luacheck_workspaces[rcfile] = 1
 
-
-
+    let check_cfg = get(s:cache_luacheck_cfg, rcfile, {})
     try
-        let check_cfg = david#lua#lsp#GetGlobalsFromLuacheckrc(rcfile)
+        if force || empty(check_cfg)
+            let check_cfg = david#lua#lsp#GetGlobalsFromLuacheckrc(rcfile)
+            let s:cache_luacheck_cfg[rcfile] = check_cfg
+            let s:cache_luacheck_workspace = rcfile
+        endif
     catch /^Vim\%((\a\+)\)\=:E370/	" Error: Could not load library lua53.dll
         let check_cfg = { 'lua_version': 'LuaJIT', 'globals': "" }
     endtry
+
     let cfg = {
                 \            'Lua': {
                 \                'runtime' : {
@@ -65,7 +69,7 @@ endf
 function! david#lua#lsp#PrintState() abort
     call scriptease#pp_command(0, -1, {
                 \        'cache_luacheck_cfg': s:cache_luacheck_cfg,
-                \        'cache_luacheck_workspaces': s:cache_luacheck_workspaces,
+                \        'cache_luacheck_workspace': s:cache_luacheck_workspace,
                 \    })
     
 endf
