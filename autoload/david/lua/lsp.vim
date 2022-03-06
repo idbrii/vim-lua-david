@@ -1,4 +1,4 @@
-let s:cache_luacheck_globs = {}
+let s:cache_luacheck_cfg = {}
 let s:cache_luacheck_workspaces = {}
 
 function! david#lua#lsp#GetLuacheckrc() abort
@@ -10,10 +10,10 @@ function! david#lua#lsp#GetLuacheckrc() abort
 endf
 function! david#lua#lsp#GetGlobalsFromLuacheckrc(rcfile) abort
     lua david = require "david"
-    let cmd = printf("vim.list(david.get_luacheck_globals('%s', {'data', 'scripts'}))", a:rcfile)
-    let globs = luaeval(cmd)
-    let s:cache_luacheck_globs[a:rcfile] = globs
-    return globs
+    let cmd = printf("david.dict(david.get_sumneko_cfg_from_luacheck('%s', {'data', 'scripts'}))", a:rcfile)
+    let cfg = luaeval(cmd)
+    let s:cache_luacheck_cfg[a:rcfile] = cfg
+    return cfg
 endf
 
 function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
@@ -31,16 +31,21 @@ function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
     endif
     let s:cache_luacheck_workspaces[rcfile] = 1
 
+
+
     try
-        let globals = david#lua#lsp#GetGlobalsFromLuacheckrc(rcfile)
+        let check_cfg = david#lua#lsp#GetGlobalsFromLuacheckrc(rcfile)
     catch /^Vim\%((\a\+)\)\=:E370/	" Error: Could not load library lua53.dll
-        let globals = [""]
+        let check_cfg = { 'lua_version': 'LuaJIT', 'globals': "" }
     endtry
     let cfg = {
                 \            'Lua': {
+                \                'runtime' : {
+                \                    'version' : check_cfg.lua_version,
+                \                },
                 \                'diagnostics': {
-                \                    'globals': globals,
-                \                    },
+                \                    'globals': check_cfg.globals,
+                \                },
                 \                'telemetry': {
                 \                    'enable': v:true,
                 \                    },
@@ -59,7 +64,7 @@ endf
 
 function! david#lua#lsp#PrintState() abort
     call scriptease#pp_command(0, -1, {
-                \        'cache_luacheck_globs': s:cache_luacheck_globs,
+                \        'cache_luacheck_cfg': s:cache_luacheck_cfg,
                 \        'cache_luacheck_workspaces': s:cache_luacheck_workspaces,
                 \    })
     
