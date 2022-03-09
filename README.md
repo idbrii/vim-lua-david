@@ -19,6 +19,7 @@ I edit lua with:
 * ale and luacheck
 * my [fork of stevedonovan/ltags](https://github.com/idbrii/ltags)
 * my [fork of xolox/vim-lua-ftplugin](https://github.com/idbrii/vim-lua-ftplugin)
+* my [fork of tbastos/vim-lua](https://github.com/idbrii/vim-lua)
 * [lua testy](https://github.com/siffiejoe/lua-testy) for unit tests
 
 # Load lua in vim (plugins)
