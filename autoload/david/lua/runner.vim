@@ -7,8 +7,8 @@ function! david#lua#runner#set_entrypoint(makeprg)
     let cur_dir = david#path#to_unix(fnamemodify(cur_file, ':h'))
     let cur_module = david#path#to_unix(fnamemodify(cur_file, ':t:r'))
 
-    if !exists("s:original_makeprg")
-        let s:original_makeprg = &makeprg
+    if !exists("b:david_lua_original_makeprg")
+        let b:david_lua_original_makeprg = &makeprg
     endif
 
     if a:makeprg =~# '^lovec\?\>'
@@ -30,7 +30,7 @@ function! david#lua#runner#set_entrypoint(makeprg)
     
     let entrypoint_makeprg = a:makeprg
     if empty(a:makeprg)
-        let entrypoint_makeprg = s:original_makeprg
+        let entrypoint_makeprg = b:david_lua_original_makeprg
     endif
     let entrypoint_makeprg = substitute(entrypoint_makeprg, '%', target, '')
 
