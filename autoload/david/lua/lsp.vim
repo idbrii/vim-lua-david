@@ -42,6 +42,8 @@ function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
         let check_cfg = { 'lua_version': 'LuaJIT', 'globals': "" }
     endtry
 
+    " When I upgrade sumneko, try this:
+                "\                    'unusedLocalExclude' : ["test_*", "_*"],
     let cfg = {
                 \            'Lua': {
                 \                'runtime' : {
