@@ -57,13 +57,13 @@ end
 
 local function test_get_luacheck()
     local pretty = require "inspect"
-    local cfg = david.get_luacheck_cfg("C:/code/gamebox/.luacheckrc")
+    local cfg = david.get_luacheck_cfg("C:/code/love-fun-kit/.luacheckrc")
     print("cfg =", pretty(cfg, { depth = 5, }))
 end
 
 local function test_get_sumneko()
     local pretty = require "inspect"
-    local cfg = david.get_sumneko_cfg_from_luacheck("C:/code/gamebox/.luacheckrc")
+    local cfg = david.get_sumneko_cfg_from_luacheck("C:/code/love-fun-kit/.luacheckrc")
     print("cfg =", pretty(cfg, { depth = 5, }))
 end
 
