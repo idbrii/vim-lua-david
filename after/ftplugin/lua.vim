@@ -5,10 +5,8 @@ setlocal tags+=./lua.tags;/
 " lua-xolox turns this on but I find it annoying.
 setlocal fo-=o
 
-" Lua uses lots of : so assume no URIs.
-" TODO: iskeyword-=: before calling?
-nmap <buffer> gx <Plug>(openbrowser-search)
-" Let vmap use smart search since I'm being explicit.
+" Lua uses lots of : so limit to known ones.
+let b:openbrowser_allowed_schemes = get(g:, 'david_openbrowser_safe_schemes', [ 'http', 'https', ])
 
 "" Quick commenting/uncommenting.
 " ~ prefix from https://www.reddit.com/r/vim/comments/4ootmz/what_is_your_little_known_secret_vim_shortcut_or/d4ehmql
