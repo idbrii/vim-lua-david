@@ -1,3 +1,27 @@
+# VS2017 and newer
+
+```bat
+pip install hererocks
+hererocks -l 5.4 -r latest c:/david/apps/lua54
+call c:\david\apps\lua54\bin\activate.bat
+which luarocks
+luarocks list luacheck
+luarocks install https://raw.githubusercontent.com/siffiejoe/lua-testy/master/testy-scm-0.rockspec
+```
+
+Add to path in local.vim:
+```vim
+    let lua_54 = expand('c:/david/apps/lua54/bin')
+    if !david#add_to_path(lua_54)
+        echoerr "Failed to find lua."
+    endif
+    if len($LUA_PATH_5_4) == 0
+        let $LUA_PATH_5_4 = lua_54
+    endif
+```
+
+# VS2008
+
 Download:
 
 * Windows x64 Executables (lua-5.3.5_Win64_bin.zip)
