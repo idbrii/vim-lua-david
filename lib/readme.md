@@ -4,8 +4,9 @@
 pip install hererocks
 hererocks -l 5.4 -r latest c:/david/apps/lua54
 call c:\david\apps\lua54\bin\activate.bat
+call C:\david\settings\daveconfig\win\visualstudio\vcvars\vcvars_vs2017.bat
 which luarocks
-luarocks list luacheck
+luarocks install luacheck
 luarocks install https://raw.githubusercontent.com/siffiejoe/lua-testy/master/testy-scm-0.rockspec
 ```
 
