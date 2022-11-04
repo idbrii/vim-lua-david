@@ -21,6 +21,8 @@ Add to path in local.vim:
     endif
 ```
 
+Download a [release of stylua](https://github.com/JohnnyMorganz/StyLua/releases) and save as ~/.vim-cache/bin/stylua
+
 # VS2008
 
 Download:
