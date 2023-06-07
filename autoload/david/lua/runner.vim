@@ -58,7 +58,7 @@ function! david#lua#runner#set_entrypoint(makeprg)
     silent! unlet g:david_project_filelist
     let g:david_project_root = fnamemodify(cur_file, ':h')
     let g:david_lua_testy_chdir = 'cd '.. cur_dir
-    call LocateAll()
+    LocateAllTagFiles
     NotGrepRecursiveFrom .
     " I put code in ./src/
     let g:inclement_n_dir_to_trim = 2
