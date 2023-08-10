@@ -57,6 +57,14 @@ function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
                 \                    },
                 \                },
                 \        }
+
+    " Prevent love detection nag: lua-language-server#679
+    " and preload nag: lua-language-server#1594
+    let cfg.Lua.workspace = {
+                \         'checkThirdParty' : v:false,
+                \         'maxPreload' : 10000,
+                \ }
+
     " For some reason, disabling individual diagnostics disables all
     " diagnostics.
     "~ let ignored_diagnostics = [
