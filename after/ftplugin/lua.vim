@@ -1,6 +1,6 @@
 
 " See ~/.vim/scripts/buildtags for how lua tags are generated.
-setlocal tags+=./lua.tags;/
+setlocal tags^=./lua.tags;/
 
 " lua-xolox turns this on but I find it annoying.
 setlocal fo-=o
