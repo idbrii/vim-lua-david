@@ -48,4 +48,5 @@ command! -buffer -nargs=* LuaLoveSetEntrypoint call david#lua#runner#set_entrypo
 command! -buffer LuaSetEntrypoint call david#lua#runner#set_entrypoint('')
 
 
-call david#lua#lsp#LoadConfigurationForWorkspace()
+" Instead of calling here. Do in response to autocmd lsp_server_init.
+"~ call david#lua#lsp#LoadConfigurationForWorkspace()
