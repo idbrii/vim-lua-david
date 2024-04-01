@@ -42,27 +42,27 @@ function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
         let check_cfg = { 'lua_version': 'LuaJIT', 'globals': "" }
     endtry
 
-    " When I upgrade sumneko, try this:
-                "\                    'unusedLocalExclude' : ["test_*", "_*"],
     let cfg = {
                 \            'Lua': {
                 \                'runtime' : {
-                \                    'version' : check_cfg.lua_version,
+                \                    'version': check_cfg.lua_version,
                 \                },
                 \                'diagnostics': {
                 \                    'globals': check_cfg.globals,
+                \                    'unusedLocalExclude' : ["test_*", "_*"],
                 \                },
                 \                'telemetry': {
                 \                    'enable': v:true,
-                \                    },
                 \                },
+                \            },
                 \        }
 
     " Prevent love detection nag: lua-language-server#679
     " and preload nag: lua-language-server#1594
     let cfg.Lua.workspace = {
                 \         'checkThirdParty' : v:false,
-                \         'maxPreload' : 10000,
+                \         'maxPreload' : 100000,
+                \         'ignoreDir': ['.git', '.svn', '.vs']
                 \ }
 
     " For some reason, disabling individual diagnostics disables all

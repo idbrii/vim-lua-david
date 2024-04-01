@@ -35,6 +35,8 @@ end
 function david.get_sumneko_cfg_from_luacheck(luacheckrc_fpath, valid_paths)
     local cfg = david.get_luacheck_cfg(luacheckrc_fpath, valid_paths)
 
+    -- These aren't passed to sumneko directly. See
+    -- david#lua#lsp#LoadConfigurationForWorkspace.
     local sumneko = {
         lua_version = "Lua 5.3",
         globals = {},
