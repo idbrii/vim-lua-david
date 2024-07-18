@@ -2,6 +2,8 @@ local lume = require "lume"
 
 local david = {}
 
+local default_valid_paths = {'data', 'scripts'}
+
 local function is_valid_files_pat(pat, valid_paths)
     for _,path in ipairs(valid_paths) do
         if pat:find(path) then
@@ -11,7 +13,7 @@ local function is_valid_files_pat(pat, valid_paths)
 end
 
 function david.get_luacheck_cfg(luacheckrc_fpath, valid_paths)
-    valid_paths = valid_paths or {'data', 'scripts'}
+    valid_paths = valid_paths or default_valid_paths
     local fn, msg = loadfile(luacheckrc_fpath)
     if not fn then
         print("ERROR[get_luacheck_cfg]", msg)
@@ -33,28 +35,63 @@ function david.get_luacheck_cfg(luacheckrc_fpath, valid_paths)
 end
 
 function david.get_sumneko_cfg_from_luacheck(luacheckrc_fpath, valid_paths)
+    valid_paths = valid_paths or default_valid_paths
     local cfg = david.get_luacheck_cfg(luacheckrc_fpath, valid_paths)
+    if not cfg then
+        return
+    end
 
-    -- These aren't passed to sumneko directly. See
-    -- david#lua#lsp#LoadConfigurationForWorkspace.
-    local sumneko = {
+    -- Collect data from luacheck config.
+    local check_cfg = {
         lua_version = "Lua 5.3",
         globals = {},
     }
-    sumneko.globals = lume.concat(sumneko.globals, cfg.globals, cfg.read_globals)
+    check_cfg.globals = lume.concat(check_cfg.globals, cfg.globals, cfg.read_globals)
     for key,settings in pairs(cfg.files) do
         if is_valid_files_pat(key, valid_paths) then
-            sumneko.globals = lume.concat(sumneko.globals, settings.read_globals, settings.globals)
+            check_cfg.globals = lume.concat(check_cfg.globals, settings.read_globals, settings.globals)
         end
     end
 
     local lua, major, minor = cfg.std:match("^(lua)(%d)(%d+)$")
     if minor then
-        sumneko.lua_version = ("Lua %d.%d"):format(major, minor)
+        check_cfg.lua_version = ("Lua %d.%d"):format(major, minor)
     elseif cfg.std:lower() == "luajit" then
-        sumneko.lua_version = "LuaJIT"
+        check_cfg.lua_version = "LuaJIT"
     end
-    return sumneko
+
+    local lsp_cfg = {
+        Lua = {
+            runtime = {
+                version = check_cfg.lua_version,
+            },
+            diagnostics = {
+                globals = check_cfg.globals,
+                unusedLocalExclude = {"test_*", "_*"},
+            },
+            telemetry = {
+                enable = true,
+            },
+        },
+    }
+
+    -- Prevent love detection nag: lua-language-server#679
+    -- and preload nag: lua-language-server#1594
+    lsp_cfg.Lua.workspace = {
+        checkThirdParty = false,
+        maxPreload = 100000,
+        ignoreDir = {".git", ".svn", ".vs"}
+    }
+
+    -- For some reason, disabling individual diagnostics disables all
+    -- diagnostics.
+    --~ local ignored_diagnostics = {
+    --~     "lowercase-global",
+    --~     "undefined-global",
+    --~ }
+    --~ lsp_cfg.Lua.diagnostics.disable = ignored_diagnostics
+
+    return lsp_cfg
 end
 
 local function test_get_luacheck()

@@ -8,18 +8,14 @@ function! david#lua#lsp#GetLuacheckrc() abort
     endif
     return david#path#to_unix(fnamemodify(rcfile, ":p"))
 endf
-function! david#lua#lsp#GetGlobalsFromLuacheckrc(rcfile) abort
+function! david#lua#lsp#BuildConfigFromLuacheckrc_uncached(rcfile) abort
     lua david = require "david"
     let cmd = printf("david.dict(david.get_sumneko_cfg_from_luacheck('%s', {'data', 'scripts'}))", a:rcfile)
     let cfg = luaeval(cmd)
     return cfg
 endf
 
-function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
-    let servername = 'sumneko-lua-language-server'
-    if lsp#get_server_status(servername) !=# 'running'
-        return
-    endif
+function! david#lua#lsp#BuildConfigFromLuacheckrc(...) abort
     let rcfile = david#lua#lsp#GetLuacheckrc()
     if !filereadable(rcfile)
         return
@@ -31,24 +27,20 @@ function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
         return
     endif
 
-    let check_cfg = get(s:cache_luacheck_cfg, rcfile, {})
+    let cfg = get(s:cache_luacheck_cfg, rcfile, {})
     try
-        if force || empty(check_cfg)
-            let check_cfg = david#lua#lsp#GetGlobalsFromLuacheckrc(rcfile)
-            let s:cache_luacheck_cfg[rcfile] = check_cfg
+        if force || empty(cfg)
+            let cfg = david#lua#lsp#BuildConfigFromLuacheckrc_uncached(rcfile)
+            let s:cache_luacheck_cfg[rcfile] = cfg
             let s:cache_luacheck_workspace = rcfile
         endif
     catch /^Vim\%((\a\+)\)\=:E370/	" Error: Could not load library lua53.dll
-        let check_cfg = { 'lua_version': 'LuaJIT', 'globals': "" }
-    endtry
-
-    let cfg = {
+        let cfg = {
                 \            'Lua': {
                 \                'runtime' : {
-                \                    'version': check_cfg.lua_version,
+                \                    'version': 'LuaJIT',
                 \                },
                 \                'diagnostics': {
-                \                    'globals': check_cfg.globals,
                 \                    'unusedLocalExclude' : ["test_*", "_*"],
                 \                },
                 \                'telemetry': {
@@ -56,23 +48,17 @@ function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
                 \                },
                 \            },
                 \        }
+    endtry
 
-    " Prevent love detection nag: lua-language-server#679
-    " and preload nag: lua-language-server#1594
-    let cfg.Lua.workspace = {
-                \         'checkThirdParty' : v:false,
-                \         'maxPreload' : 100000,
-                \         'ignoreDir': ['.git', '.svn', '.vs']
-                \ }
+    return cfg
+endf
 
-    " For some reason, disabling individual diagnostics disables all
-    " diagnostics.
-    "~ let ignored_diagnostics = [
-    "~             \    'lowercase-global', 
-    "~             \    'undefined-global',
-    "~             \]
-    "~ let cfg.Lua.diagnostics.disable = ignored_diagnostics
-
+function! david#lua#lsp#LoadConfigurationForWorkspace(...) abort
+    let servername = 'sumneko-lua-language-server'
+    if lsp#get_server_status(servername) !=# 'running'
+        return
+    endif
+    let cfg = david#lua#lsp#BuildConfigFromLuacheckrc(...)
     call lsp#update_workspace_config(servername, cfg)
 endf
 
