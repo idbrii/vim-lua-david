@@ -88,6 +88,7 @@ function david.get_sumneko_cfg_from_luacheck(luacheckrc_fpath, valid_paths)
     --~ local ignored_diagnostics = {
     --~     "lowercase-global",
     --~     "undefined-global",
+    --~     "trailing-space",  -- I lost the war
     --~ }
     --~ lsp_cfg.Lua.diagnostics.disable = ignored_diagnostics
 
