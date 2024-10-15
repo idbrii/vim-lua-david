@@ -83,14 +83,15 @@ function david.get_sumneko_cfg_from_luacheck(luacheckrc_fpath, valid_paths)
         ignoreDir = {".git", ".svn", ".vs"}
     }
 
-    -- For some reason, disabling individual diagnostics disables all
-    -- diagnostics.
-    --~ local ignored_diagnostics = {
-    --~     "lowercase-global",
-    --~     "undefined-global",
-    --~     "trailing-space",  -- I lost the war
-    --~ }
-    --~ lsp_cfg.Lua.diagnostics.disable = ignored_diagnostics
+    local ignored_diagnostics = {
+        "lowercase-global",
+        "undefined-global",
+        "trailing-space",  -- I lost the war
+    }
+    lsp_cfg.Lua.diagnostics.disable = ignored_diagnostics
+    -- Disabling individual diagnostics disabled all diagnostics before, but
+    -- maybe doesn't anymore? Could also try enabling:
+    --~ lsp_cfg.Lua.diagnostics.enable = true
 
     return lsp_cfg
 end
