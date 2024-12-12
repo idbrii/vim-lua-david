@@ -94,6 +94,11 @@ function david.get_sumneko_cfg_from_luacheck(luacheckrc_fpath, valid_paths)
     -- maybe doesn't anymore? Could also try enabling:
     --~ lsp_cfg.Lua.diagnostics.enable = true
 
+    -- All luacheck diagnostics are severity 2, but can control luals here.
+    --~ lsp_cfg.Lua.diagnostics.groupSeverity = {
+    --~     unused = "Information",
+    --~ }
+
     return lsp_cfg
 end
 
