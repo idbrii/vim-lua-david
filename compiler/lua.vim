@@ -70,6 +70,9 @@ call add(s:efm, '%f(%l%\,%c) in %m')
 "       C:\apps\lua53\bin\lua.exe: conversation.lua:53: 'TALK_1' doesn't exist.
 call add(s:efm, '%.%#lua%.%#: %f:%l: %m')
 
+" Using lume.trace or other functions to print file:line
+"   scripts/components/spawner.lua:90: failed to spawn 'player'
+call add(s:efm, '%f:%l: %m')
 
 let &l:efm = join(s:efm, ",")
 unlet s:efm
