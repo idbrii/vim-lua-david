@@ -21,11 +21,12 @@ nnoremap <buffer> <Leader>jI :<C-u>NotGrep \b<C-r>=tolower(expand('%:t:r'))<CR>\
 nnoremap <buffer> <F1> :<C-u>sp ~/.vim-aside<CR>
 "inoremap <buffer> <F1> <Esc>
 
-" Omnicompletion in lua requires vim lua to load modules and I'm usually
-" targetting a different lua. Use tags instead (no scope intelligence, but
-" better than nothing). Omnicompletion is helpful in expanding modules, but
+" lua-xolox's Omnicompletion in lua requires vim lua to load modules and I'm usually
+" targetting a different lua. Can use tags instead (no scope intelligence, but
+" better than nothing). Omnicompletion seems helpful in expanding modules, but
 " that kicks in automatically, so that's good enough.
-inoremap <buffer> <C-Space> <C-x><C-]>
+" Now, lua-ls provides completion, so use that default instead.
+"~ inoremap <buffer> <C-Space> <C-x><C-]>
 
 if get(g:, "lsp_loaded", 0) && lsp#get_server_status() =~# '\v<lua>.*running'
     setlocal omnifunc=lsp#complete
