@@ -84,11 +84,12 @@ function david.get_sumneko_cfg_from_luacheck(luacheckrc_fpath, valid_paths)
     }
 
     local ignored_diagnostics = {
-        "lowercase-global",
-        "undefined-global",
-        "trailing-space",  -- I lost the war
-        "unused-local",  -- triggers for arguments
         "empty-block",  -- Too much noise while typing.
+        "lowercase-global",
+        "trailing-space",  -- I lost the war
+        "undefined-global",
+        "unused-function",  -- testy.lua functions look unused.
+        "unused-local",  -- triggers for arguments
     }
     lsp_cfg.Lua.diagnostics.disable = ignored_diagnostics
     -- Disabling individual diagnostics disabled all diagnostics before, but
