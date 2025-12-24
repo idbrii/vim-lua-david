@@ -5,7 +5,7 @@ if expand('%:p') !~# "vim"
 endif
 
 if has('nvim')
-    if david#path#to_unix('%') =~# "/lua/"
+    if david#path#to_unix('%:p') =~# "vim/.*/lua/"
         " Lua modules must be cleared from packages to load.
         nnoremap <buffer> <Leader>vso :<C-u>update<CR>:lua require"david.reload".ReloadAll()<CR>
     else
