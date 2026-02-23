@@ -86,6 +86,7 @@ function david.get_sumneko_cfg_from_luacheck(luacheckrc_fpath, valid_paths)
     local ignored_diagnostics = {
         "different-requires", -- we patch the loader to make /\. separators all the same.
         "empty-block",  -- Too much noise while typing.
+        "inject-field",  -- Makes lua too static.
         "lowercase-global",
         "trailing-space",  -- I lost the war
         "undefined-global",
